@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import connectDB from "@/lib/connectDB";
+import { connectDB } from "@/lib/connectDB";
 import nodemailer from "nodemailer";
 
 export async function POST(req) {
