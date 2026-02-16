@@ -10,10 +10,23 @@ export default function NewArrivals() {
     const fetchNewArrivals = async () => {
       try {
         const res = await fetch("/api/products?category=New Arrivals");
+
+        if (!res.ok) {
+          console.error("API failed:", res.status);
+          setProducts([]);
+          return;
+        }
+
         const data = await res.json();
-        setProducts(data);
+
+        if (Array.isArray(data)) {
+          setProducts(data);
+        } else {
+          setProducts([]);
+        }
       } catch (error) {
         console.error("Error fetching new arrivals:", error);
+        setProducts([]);
       } finally {
         setLoading(false);
       }
@@ -21,6 +34,7 @@ export default function NewArrivals() {
 
     fetchNewArrivals();
   }, []);
+
 
   return (
     <section className="py-16 bg-[#F8F5F2]">
@@ -45,9 +59,10 @@ export default function NewArrivals() {
 
         {/* Product Grid */}
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          {products.map((product) => (
-            <ProductCard key={product._id} product={product} />
-          ))}
+          {Array.isArray(products) &&
+            products.map((product) => (
+              <ProductCard key={product._id} product={product} />
+            ))}
         </div>
       </div>
     </section>
